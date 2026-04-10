@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bank Application</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #dbeafe, #eff6ff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+    }
+
+    .header {
+      background: #1d4ed8;
+      color: white;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 15px;
+      opacity: 0.95;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 24px;
+    }
+
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .card h2 {
+      margin-bottom: 16px;
+      color: #0f172a;
+      font-size: 22px;
+    }
+
+    .balance-box {
+      background: #dbeafe;
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .balance-box span {
+      display: block;
+      font-size: 14px;
+      color: #1e3a8a;
+      margin-bottom: 6px;
+    }
+
+    .balance-box strong {
+      font-size: 32px;
+      color: #1d4ed8;
+    }
+
+    .input-group {
+      margin-bottom: 14px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #334155;
+      font-weight: bold;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .input-group input:focus {
+      border-color: #2563eb;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .deposit-btn {
+      background: #16a34a;
+      color: white;
+    }
+
+    .withdraw-btn {
+      background: #dc2626;
+      color: white;
+    }
+
+    .balance-btn {
+      background: #2563eb;
+      color: white;
+    }
+
+    .clear-btn {
+      background: #475569;
+      color: white;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+
+    .message {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 15px;
+      display: none;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+      display: block;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+      display: block;
+    }
+
+    .history-list {
+      list-style: none;
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .history-list li {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-left: 5px solid #2563eb;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .history-list .type {
+      font-weight: bold;
+      color: #0f172a;
+    }
+
+    .history-list .amount {
+      color: #2563eb;
+      margin-top: 4px;
+    }
+
+    .history-list .time {
+      color: #64748b;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .empty {
+      color: #64748b;
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        grid-template-columns: 1fr;
+      }
+
+      .buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Bank Application</h1>
+      <p>Deposit, withdraw, check balance, and view transaction history</p>
+    </div>
+
+    <div class="content">
+      <div class="card">
+        <h2>Account</h2>
+        <div class="balance-box">
+          <span>Current Balance</span>
+          <strong id="balance">₹0.00</strong>
+        </div>
+
+        <div class="input-group">
+          <label for="amount">Enter Amount</label>
+          <input type="number" id="amount" placeholder="Enter amount" min="1" step="0.01" />
+        </div>
+
+        <div class="buttons">
+          <button class="deposit-btn" onclick="depositAmount()">Deposit</button>
+          <button class="withdraw-btn" onclick="withdrawAmount()">Withdraw</button>
+          <button class="balance-btn" onclick="checkBalance()">Check Balance</button>
+          <button class="clear-btn" onclick="clearHistory()">Clear History</button>
+        </div>
+
+        <div id="message" class="message"></div>
+      </div>
+
+      <div class="card">
+        <h2>Transaction History</h2>
+        <ul id="historyList" class="history-list">
+          <div class="empty" id="emptyText">No transactions yet.</div>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let balance = 0;
+    let history = [];
+
+    function formatCurrency(value) {
+      return "₹" + value.toFixed(2);
+    }
+
+    function showMessage(text, type) {
+      const message = document.getElementById("message");
+      message.textContent = text;
+      message.className = "message " + type;
+    }
+
+    function updateBalance() {
+      document.getElementById("balance").textContent = formatCurrency(balance);
+    }
+
+    function addToHistory(type, amount) {
+      const now = new Date();
+      history.unshift({
+        type: type,
+        amount: amount,
+        time: now.toLocaleString()
+      });
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const historyList = document.getElementById("historyList");
+      const emptyText = document.getElementById("emptyText");
+
+      historyList.innerHTML = "";
+
+      if (history.length === 0) {
+        historyList.innerHTML = '<div class="empty" id="emptyText">No transactions yet.</div>';
+        return;
+      }
+
+      history.forEach(item => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <div class="type">${item.type}</div>
+          <div class="amount">${formatCurrency(item.amount)}</div>
+          <div class="time">${item.time}</div>
+        `;
+        historyList.appendChild(li);
+      });
+    }
+
+    function getAmount() {
+      const amountInput = document.getElementById("amount");
+      const amount = parseFloat(amountInput.value);
+      return amount;
+    }
+
+    function depositAmount() {
+      const amount = getAmount();
+
+      if (isNaN(amount) || amount <= 0) {
+        showMessage("Please enter a valid deposit amount.", "error");
+        return;
+      }
+
+      balance += amount;
+      updateBalance();
+      addToHistory("Deposit", amount);
+      showMessage("Amount deposited successfully.", "success");
+      document.getElementById("amount").value = "";
+    }
+
+    function withdrawAmount() {
+      const amount = getAmount();
+
+      if (isNaN(amount) || amount <= 0) {
+        showMessage("Please enter a valid withdrawal amount.", "error");
+        return;
+      }
+
+      if (amount > balance) {
+        showMessage("Insufficient balance.", "error");
+        return;
+      }
+
+      balance -= amount;
+      updateBalance();
+      addToHistory("Withdraw", amount);
+      showMessage("Amount withdrawn successfully.", "success");
+      document.getElementById("amount").value = "";
+    }
+
+    function checkBalance() {
+      showMessage("Current balance is " + formatCurrency(balance), "success");
+    }
+
+    function clearHistory() {
+      history = [];
+      renderHistory();
+      showMessage("Transaction history cleared.", "success");
+    }
+
+    updateBalance();
+    renderHistory();
+  </script>
+</body>
+</html>
